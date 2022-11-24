@@ -8,10 +8,9 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         s = self.path
         url_components = parse.urlsplit(s)
-        query_string = parse.parse_qwl(url_components.query)
+        query_string = parse.parse_qsl(url_components.query)
         dic = dict(query_string)
         url = 'https://restcountries.com/v3.1/'
-        message = "Error, this is API is not currently working, or you have entered an invalid endpoint."
 
         if "country" in dic:
             r = requests.get(url + "name/" + dic["country"])
@@ -26,6 +25,9 @@ class Handler(BaseHTTPRequestHandler):
             data_capital = data[0]["capital"]
             data_country = data[0]["name"]
             message = f' {data_capital} is the capital of {data_country}'
+
+        else:
+            message = "Error, this is API is not currently working, or you have entered an invalid endpoint."
 
         self.send_response(200)
         self.send_header('Content-type', 'text/plain')
