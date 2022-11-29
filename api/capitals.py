@@ -3,30 +3,34 @@ from urllib import parse
 import requests
 
 
-class Handler(BaseHTTPRequestHandler):
+class handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         s = self.path
         url_components = parse.urlsplit(s)
         query_string = parse.parse_qsl(url_components.query)
         dic = dict(query_string)
-        url = 'https://restcountries.com/v3.1/'
 
-        if "country" in dic:
-            r = requests.get(url + "name/" + dic["country"])
-            data = r.json()
-            data_capital = data[0]["capital"]
-            data_country = data[0]["name"]
-            message = f'The capital of {data_country} is {data_capital}'
+        message = None
 
-        if "capital" in dic:
-            r = requests.get(url + "capital/" + dic["capital"])
-            data = r.json()
-            data_capital = data[0]["capital"]
-            data_country = data[0]["name"]
-            message = f' {data_capital} is the capital of {data_country}'
+        try:
+            if "country" in dic:
+                url = 'https://restcountries.com/v3/name/"'
+                r = requests.get(url + dic["country"])
+                data = r.json()
+                data_capital = data[0]["capital"]
+                data_country = data[0]["name"]
+                message = f'The capital of {data_country} is {data_capital}'
 
-        else:
+            if "capital" in dic:
+                url = 'https://restcountries.com/v3/name/"'
+                r = requests.get(url + "capital/" + dic["capital"])
+                data = r.json()
+                data_capital = data[0]["capital"]
+                data_country = data[0]["name"]
+                message = f' {data_capital} is the capital of {data_country}'
+
+        except:
             message = "Error, this is API is not currently working, or you have entered an invalid endpoint."
 
         self.send_response(200)
